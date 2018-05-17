@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import Sound from 'react-native-sound';
 var device = Dimensions.get('window');
@@ -13,6 +13,14 @@ var testSound =[
   {
     name: 'Another name',
     fileName: 'ringtone1.mp3'
+  },
+  {
+    name: 'IPhone X ringtone',
+    fileName: 'iphone_x.mp3'
+  },
+  {
+    name: 'Samsung Guitar',
+    fileName: 'samsung_guitar.mp3'
   }
 ]
 
@@ -22,11 +30,16 @@ export default class App extends React.Component{
     super(props);
     this.state ={
       selectedSoundName: null,
-      textInputTitleValue: null,
-      textInputDecValue: null
+      titleValue: null,
+      descriptionValue: null
     }
     this.selectedSound = null
   }
+
+componentDidMount(){
+  Actions.refresh({onRight : () => this.saveAlarm()})
+  Actions.refresh({onLeft : ()=>this.cancelAlarm()})
+}
 
   playSelectedSound(soundName){
     Sound.setCategory('Playback')
@@ -71,8 +84,8 @@ export default class App extends React.Component{
   render() {
     return (
       <View style={styles.viewStyle}>
-        <TextInput style={styles.titleStyle} value={this.state.textInputValue} placeholder='  Title'/>
-        <TextInput style={styles.descriptionStyle} value={this.state.textInputDecValue} placeholder='  Description'/>
+        <TextInput style={styles.titleStyle} value={this.state.titleValue} onChangeText={(text)=>this.setState({titleValue: text})} placeholder='Title'/>
+        <TextInput style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>
         <Picker
           selectedValue={this.state.selectedSoundName}
           style={{ height: 50, width: device.width - 80 }}
@@ -91,4 +104,48 @@ export default class App extends React.Component{
     })
   }
 
-}
+  cancelAlarm(){
+    Actions.pop()
+    if (this.selectedSound === null){
+
+    }else{
+    this.selectedSound.stop()
+    }
+  }
+
+  saveAlarm(){
+
+    var dateId = new Date().valueOf();
+    var alarmInfo = {}
+    alarmInfo.title = this.state.titleValue
+    alarmInfo.description = this.state.descriptionValue
+    alarmInfo.latitude = this.props.location.coordinate.latitude
+    alarmInfo.longitude = this.props.location.coordinate.longitude
+    alarmInfo.isMarkerDraggable = false
+    alarmInfo.keyId = 'AlId' + dateId
+
+    if (this.selectedSound === null){
+
+    }else{
+      this.selectedSound.stop()
+    }
+
+
+    AsyncStorage.setItem('AlId' + dateId, JSON.stringify(alarmInfo), () => {
+
+      Alert.alert(
+        'Saved',
+        'Your alarm is successfully saved.',
+        [
+          {text: 'Okay', onPress: () => {this.props.refreshMapView(); Actions.pop() }},
+        ],
+        { cancelable: false }
+      )
+
+    });
+    console.log("*************");
+    console.log(this.props.location);
+
+  }
+
+}//end of class

@@ -15,8 +15,8 @@ export default class App extends React.Component{
         <Scene key='home' hideNavBar={false} initial={true} component={Home} titleStyle={styles.homeTitleStyle} title='Home' onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='+'
           onLeft={()=>{}} leftTitleStyle={styles.rightTitleStyle} leftTitle='Edit'/>
       </Scene>
-      <Scene key='addAlarm' component={AddAlarm} title='Add Alarm' titleStyle={styles.homeTitleStyle} onRight={()=>this.saveFunction()} rightTitleStyle={styles.rightTitleStyle} rightTitle='Save'
-        onLeft={()=>this.cancelFunction()} leftTitleStyle={styles.rightTitleStyle} leftTitle='Cancel'/>
+      <Scene key='addAlarm' component={AddAlarm} title='Add Alarm' titleStyle={styles.homeTitleStyle} onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='Save'
+        onLeft={()=>{}} leftTitleStyle={styles.rightTitleStyle} leftTitle='Cancel'/>
       </Modal>
       </Router>
     );
@@ -25,13 +25,8 @@ export default class App extends React.Component{
   editFunction(){
     alert('aa')
   }
-  saveFunction(){
-    alert('aa')
-  }
-  cancelFunction(){
-    Actions.pop()
-  }
-}
+
+}//end of class
 
 const styles = StyleSheet.create({
   homeTitleStyle:{
