@@ -4,7 +4,10 @@ var device = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   viewStyle:{
-    flex:1,
+    top: 50,
+    height: device.height -50,
+    width: device.width,
+    //flex:1,
     backgroundColor:'#F8F6E1',
     alignItems: 'center',
 
@@ -22,6 +25,25 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     marginTop: 10
+  },
+  leaderView:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    margin: 10,
+  },
+  outerView: {
+    borderWidth: 1,
+    width: 20,
+    height: 20,
+    borderRadius: 10,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  innerView:{
+    borderRadius: 5,
+    width: 10,
+    height: 10,
+    borderWidth: 1
   }
 });
 

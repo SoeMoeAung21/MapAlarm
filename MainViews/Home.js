@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Platform, StyleSheet, Text, View, ScrollView, TouchableHighlight, Animated, AsyncStorage } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import App from '../App.js'
+
 import Sound from 'react-native-sound';
 import RNAlarm from 'react-native-alarm';
 import styles from './MainViewStyles/HomeStyle';
@@ -18,6 +20,9 @@ export default class Home extends React.Component{
     super(props);
     this.state ={
       allReminders : [],
+      changingLatitude: null,
+      changingLongitude: null,
+      error: null,
       currentPosition: null,
       markerPosition: null,
       buttonHeight: 0,
@@ -29,13 +34,15 @@ export default class Home extends React.Component{
 
   componentDidMount(){
     Actions.refresh({onRight : () => this.addNewReminder()})
-    Actions.refresh({onLeft: ()=>this.editOldReminder()})
+    Actions.refresh({onLeft: ()=>this.removeReminder()})
     this.retrieveAllSavedAlarm()
     this.getCurrentLocation()
+    this.userLocationChange()
+
 
 
     Sound.setCategory('Playback')
-      // See notes below about preloading sounds within initialization code below.
+
     this.whoosh = new Sound(testSound[1], Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('failed to load the sound', error);
@@ -43,36 +50,41 @@ export default class Home extends React.Component{
       }
 
 
-      // loaded successfully
+
       console.log('duration in seconds: ' + this.whoosh.getDuration() + 'number of channels: ' + this.whoosh.getNumberOfChannels());
     });
 
   }
+
+
+
 
   retrieveAllSavedAlarm(){
     var tempArray =[];
     var service = this
     AsyncStorage.getAllKeys((err, keys) => {
       AsyncStorage.multiGet(keys, (err, stores) => {
-        console.log('***************');
+        console.log('******* Stores ********');
         console.log(stores);
         console.log('***************');
 
         stores.map((result, i, store) => {
-          // get at each store's key/value so you can work with it
+
           var key = store[i][0];
           var value = JSON.parse(store[i][1])
           value.markerImage = testImage
           tempArray.push(value)
         });
 
-        console.log('******* tempArray ********');
-        console.log(tempArray.length);
-        console.log('***************');
+
 
         service.setState({
           allReminders : tempArray.slice()
+
         })
+        console.log('******* allReminders ********');
+        console.log(this.state.allReminders);
+        console.log('***************');
         TEMPNOTE = tempArray.slice();
       });
     });
@@ -94,15 +106,14 @@ export default class Home extends React.Component{
 
   soundAudio(){
 
-      // Play the sound with an onEnd callback
+
       this.whoosh.play((success) => {
         if (success) {
           console.log('successfully finished playing');
           this.soundAudio()
         } else {
           console.log('playback failed due to audio decoding errors');
-          // reset the player to its uninitialized state (android only)
-          // this is the only option to recover after an error occured and use the player again
+
           this.whoosh.reset();
         }
       });
@@ -114,12 +125,13 @@ export default class Home extends React.Component{
       this.setState({
         currentPosition: position,
         mapRegion : {
-          latitude: position.latitude,
-          longitude: position.longitude,
-          latitudeDelta: 1,
-          longitudeDelta: 1
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+          latitudeDelta: 0.0099,
+          longitudeDelta: 0.0055,
         }
       });
+      console.log('-----------Position------------');
       console.log(position);
       }, (error) => {
         alert(JSON.stringify(error))
@@ -130,7 +142,48 @@ export default class Home extends React.Component{
     });
   }
 
+  userLocationChange(){
+    this.watchID = navigator.geolocation.watchPosition(
+      (position)=>{
+        this.setState({
+          changingLatitude: position.coords.latitude,
+          changingLongitude: position.coords.longitude,
+          error: null,
+        })
+        console.log('===============PPPPPPPPP===============');
+        console.log(position);
+        this.checkingPosition()
+      },
+      (error)=>this.setState({
+          error: error.message
+      })
+    )
+
+  }
+
+  checkingPosition(){
+
+    this.state.allReminders.map((item)=>{
+
+      if(item.latitude-0.0005 < this.state.changingLatitude < item.latitude+0.0005 && item.longitude-0.0005 < this.state.changingLongitude < item.longitude+0.0005){
+        alert('Welldone!')
+        navigator.geolocation.clearWatch(this.watchId);
+      }else{
+        navigator.geolocation.clearWatch(this.watchId);
+      }
+
+      console.log('|||||||||||||||item|||||||||||||||');
+      console.log(item);
+
+    })
+
+
+  }
+
+
   addNewReminder(){
+
+
     this.whoosh.stop()
     if(!this.state.alreadyShowNewMarker){
       var tempObj = {
@@ -149,14 +202,15 @@ export default class Home extends React.Component{
         buttonHeight: 40,
         alreadyShowNewMarker: true
       })
-      Animated.timing(                  // Animate over time
-        this.state.opacityValue,            // The animated value to drive
+      Animated.timing(
+        this.state.opacityValue,
         {
-          toValue: 1,                   // Animate to opacity: 1 (opaque)
-          duration: 1000,              // Make it take a while
+          toValue: 1,
+          duration: 1000,
         }
       ).start();
       Actions.refresh({rightTitle: 'Cancel'})
+      Actions.refresh({leftTitle: null})
     }else{
 
       console.log('******* no. of TEMPNOTE ******');
@@ -169,14 +223,19 @@ export default class Home extends React.Component{
         alreadyShowNewMarker: false
       })
       Actions.refresh({rightTitle: '+'})
+      Actions.refresh({leftTitle: 'Remove'})
 
     }
   }
+
+
 
   render() {
     return (
       <View style={styles.container}>
         <MapView
+          region={this.state.mapRegion}
+          onRegionChange={(region)=>this.setState({mapRegion: region})}
           style={{flex: 1}}
           zoomEnabled={true}
           pitchEnabled={true}
@@ -186,7 +245,9 @@ export default class Home extends React.Component{
           showsCompass={true}
           showsIndoorLevelPicker={true}
           showsIndoors={true}
+          showsMyLocationButton={true}
         >
+
         {this.renderMarkers()}
 
         </MapView>
@@ -200,21 +261,19 @@ export default class Home extends React.Component{
   }
 
   renderMarkers() {
-    console.log('******* no. of remainders******');
-    console.log(this.state.allReminders.length);
-    console.log('******* no. of remainders******');
+
 
     return this.state.allReminders.map((marker) => {
 
       return(
         <Marker
+          onLongPress={()=>this.editMarker(marker)}
           coordinate={{latitude: marker.latitude,longitude: marker.longitude}}
           title={marker.title ? marker.title : 'Hello'}
           description={marker.description}
           centerOffset={{ x: 0, y: 0 }}
           anchor={{ x: 1, y: 1 }}
           onDragEnd={(e)=> this.changeNewMarkerLocation(e)}
-          image={marker.markerImage}
           draggable={marker.isMarkerDraggable}
         />
       )
@@ -237,12 +296,16 @@ export default class Home extends React.Component{
     })
   }
 
+  editMarker(marker){
+    Actions.editMarker({item: marker})
+  }
+
   comfirmingLocation(){
     Actions.addAlarm({location : this.state.markerPosition, refreshMapView : () => this.refreshMapView()})
   }
 
-  editOldReminder(){
-    Actions.addAlarm({title: 'Edit Alarm'})
+  removeReminder(){
+    alert('aaa')
   }
 
 

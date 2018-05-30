@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS, TouchableHighlight } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
+import App from '../App.js'
 import Sound from 'react-native-sound';
 var device = Dimensions.get('window');
 
@@ -24,16 +25,44 @@ var testSound =[
   }
 ]
 
-export default class App extends React.Component{
+var labelData=[
+  {
+    key: 1,
+    outerBackgroundColor: 'white',
+    innerBackgroundColor: 'red',
+    type: 'Urgent',
+    typeColor: 'black'
+  },
+  {
+    key: 2,
+    outerBackgroundColor: 'white',
+    innerBackgroundColor: 'orange',
+    type: 'Important',
+    typeColor: 'black'
+  },
+  {
+    key: 3,
+    outerBackgroundColor: 'white',
+    innerBackgroundColor: 'green',
+    type: 'Normal',
+    typeColor: 'black'
+  }
+
+]
+
+
+export default class AddAlarm extends React.Component{
 
   constructor(props){
     super(props);
     this.state ={
       selectedSoundName: null,
       titleValue: null,
-      descriptionValue: null
+      descriptionValue: null,
+      selectedLableIndex: 0
     }
     this.selectedSound = null
+    this.labelFunction = this.labelFunction.bind(this)
   }
 
 componentDidMount(){
@@ -43,7 +72,7 @@ componentDidMount(){
 
   playSelectedSound(soundName){
     Sound.setCategory('Playback')
-      // See notes below about preloading sounds within initialization code below.
+
     this.selectedSound = new Sound(soundName, Sound.MAIN_BUNDLE, (error) => {
       if (error) {
         console.log('failed to load the sound', error);
@@ -51,22 +80,22 @@ componentDidMount(){
       }
 
       this.soundAudio()
-      // loaded successfully
+
       console.log('duration in seconds: ' + this.selectedSound.getDuration() + 'number of channels: ' + this.selectedSound.getNumberOfChannels());
     });
   }
 
   soundAudio(){
 
-      // Play the sound with an onEnd callback
+
       this.selectedSound.play((success) => {
         if (success) {
           console.log('successfully finished playing');
 
         } else {
           console.log('playback failed due to audio decoding errors');
-          // reset the player to its uninitialized state (android only)
-          // this is the only option to recover after an error occured and use the player again
+
+
           this.selectedSound.reset();
         }
       });
@@ -76,9 +105,70 @@ componentDidMount(){
       if(this.selectedSound != null){
           this.selectedSound.stop()
       }
-
       this.setState({selectedSoundName: value})
       this.playSelectedSound(value)
+    }
+
+    labelFunction(){
+      return labelData.map((item)=>{
+        return(
+          <View style={styles.leaderView}>
+            <TouchableHighlight onPress={()=>this.pickingLabel(item)} underlayColor='transparent'>
+            <View style={this.getOuterCircleStyle(item.key)}>
+              <View style={[styles.innerView,{backgroundColor: item.innerBackgroundColor}]}>
+              </View>
+            </View>
+            </TouchableHighlight>
+            <Text style={this.getTextStyle(item.key)}>{item.type}</Text>
+          </View>
+        )
+      }
+      )
+    }
+
+    getTextStyle(key){
+      var tempTypeColor = 'black'
+
+      if(this.state.selectedLableIndex === key){
+        tempTypeColor = 'blue'
+      }
+      return(
+        {
+          color: tempTypeColor,
+          fontSize: 18
+        }
+      )
+
+    }
+
+    getOuterCircleStyle(key){
+      var tempBGC = '#ffffff'
+      var tempW = 20
+      var tempH = 20
+
+      if(this.state.selectedLableIndex === key){
+        tempBGC = '#505050',
+        tempW = 25
+        tempH = 25
+
+      }
+      return(
+        {
+          borderWidth: 1,
+          width: tempW,
+          height: tempH,
+          borderRadius: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: tempBGC,
+        }
+      )
+    }
+
+    pickingLabel(item){
+      this.setState({
+        selectedLableIndex: item.key
+      })
     }
 
   render() {
@@ -86,6 +176,10 @@ componentDidMount(){
       <View style={styles.viewStyle}>
         <TextInput style={styles.titleStyle} value={this.state.titleValue} onChangeText={(text)=>this.setState({titleValue: text})} placeholder='Title'/>
         <TextInput style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>
+        <View style={{alignItems: 'center', flexDirection: 'row', padding: 10}}>
+          <Text style={{color: 'blue', fontSize: 20, fontWeight: 'bold', marginRight: 20}}>Label : </Text>
+          {this.labelFunction()}
+        </View>
         <Picker
           selectedValue={this.state.selectedSoundName}
           style={{ height: 50, width: device.width - 80 }}
