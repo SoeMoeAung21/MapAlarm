@@ -4,24 +4,23 @@ var device = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   viewStyle:{
-    top: 50,
     height: device.height -50,
     width: device.width,
-    //flex:1,
-    backgroundColor:'#F8F6E1',
+    backgroundColor:'#07575b',
     alignItems: 'center',
-
   },
   titleStyle:{
     height: 30,
     width: device.width - 100,
     borderWidth: 1,
+    backgroundColor: '#c4dfe6',
     borderRadius: 10,
     marginTop: 10
   },
   descriptionStyle:{
     height: 100,
     width: device.width -100,
+    backgroundColor: '#c4dfe6',
     borderRadius: 10,
     borderWidth: 1,
     marginTop: 10

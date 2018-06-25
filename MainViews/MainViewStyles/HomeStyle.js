@@ -12,7 +12,7 @@ container: {
 buttonViewStyle:{
   alignItems: 'center',
   justifyContent: 'center',
-  backgroundColor: '#2A5BF1',
+  backgroundColor: '#07575b',
   width: device.width - 80,
   alignSelf: 'center',
   //borderWidth: 1,
@@ -26,7 +26,7 @@ buttonViewStyle:{
 buttonTextStyle:{
   fontSize: 16,
   fontWeight: 'bold',
-  color: 'black',
+  color: '#c4dfe6',
 }
 
 });

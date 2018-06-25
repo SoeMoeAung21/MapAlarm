@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { Platform, StyleSheet, Text, View, PushNotificationIOS } from 'react-native';
 import {Router, Scene, Actions, Modal, Lightbox} from 'react-native-router-flux';
 
 import Home from './MainViews/Home';
@@ -14,30 +14,43 @@ export default class App extends React.Component{
       <Lightbox>
       <Modal>
       <Scene key='root' hideNavBar={true}>
-        <Scene key='home' hideNavBar={false} initial={true} component={Home} titleStyle={styles.homeTitleStyle} title='Home' onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='+'
-          onLeft={()=>{}} leftTitleStyle={styles.rightTitleStyle} leftTitle='Remove'/>
+        <Scene key='home' hideNavBar={false} initial={true}   component={Home} titleStyle={styles.homeTitleStyle} title='Map Alarm' onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='+'
+         />
       </Scene>
-      <Scene key='addAlarm' component={AddAlarm} title='Add Alarm' titleStyle={styles.homeTitleStyle} onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='Save'
+      <Scene key='addAlarm' component={AddAlarm} title='Add Alarm' navigationBarStyle={styles.navBarStyle} titleStyle={styles.addAlarmTitleStyle} onRight={()=>{}} rightTitleStyle={styles.rightTitleStyle} rightTitle='Save'
         onLeft={()=>{}} leftTitleStyle={styles.rightTitleStyle} leftTitle='Cancel'/>
       </Modal>
-        <Scene key='editMarker' component={EditMarker}/>
+      <Scene key='editMarker' component={EditMarker}/>
       </Lightbox>
       </Router>
     );
   }
 
-  testFunction(){
-    alret('hi')
-  }
 
 
 }//end of class
 
 const styles = StyleSheet.create({
-  homeTitleStyle:{
+  navBarStyle:{
+    backgroundColor: '#003b46',
 
   },
+  homeTitleStyle:{
+    fontFamily: 'Georgia',
+    color: '#003b46',
+    fontWeight: 'bold',
+    textShadowOffset: {width: 5, height: 5},
+    textShadowColor: 'black',
+    textShadowRadius: 10
+  },
+  addAlarmTitleStyle:{
+      fontFamily: 'Georgia',
+      color: 'white',
+      textShadowOffset: {width: 5, height: 5},
+      textShadowColor: 'white',
+      textShadowRadius: 10
+  },
   rightTitleStyle:{
-    color: '#2D2D2D',
+
   }
 });

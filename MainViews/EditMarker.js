@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableHighlight } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableHighlight, Alert } from 'react-native';
 import {Router, Scene, Actions, Modal, Lightbox} from 'react-native-router-flux';
 var device = Dimensions.get('window');
 
@@ -8,21 +8,32 @@ export default class App extends React.Component{
   render() {
     return (
       <View style={styles.container}>
-        <View style={styles.embeddedContainer}>
         <TouchableHighlight style={styles.closeButtonStyle} onPress={()=>this.lightboxCloseButton()} underlayColor='transparent'>
           <View>
-            <Text>Close</Text>
+            <Text style={{color: 'blue'}}>Close</Text>
           </View>
         </TouchableHighlight>
-        <TouchableHighlight style={styles.removeMarkerStyle} onPress={()=>this.removeMarker()} underlayColor='transparent'>
+
+        <View style={{padding: 10, flexDirection : 'row'}}>
+          <Text style={styles.labelStyle}>Title : </Text> <Text>{this.props.item.title}</Text>
+        </View>
+        <View style={{padding: 10, flexDirection : 'row'}}>
+          <Text style={styles.labelStyle}>Description : </Text> <Text >{this.props.item.description}</Text>
+        </View>
+        <View style={{padding: 10, flexDirection : 'row'}}>
+          <Text style={styles.labelStyle}>Street : </Text> <Text>{this.props.item.address[0].streetName}</Text>
+        </View>
+        <View style={{padding: 10, flexDirection : 'row'}}>
+          <Text style={styles.labelStyle}>Area : </Text> <Text>{this.props.item.address[0].adminArea}</Text>
+        </View>
+        <View style={{padding: 10, flexDirection : 'row'}}>
+          <Text style={styles.labelStyle}>Country : </Text> <Text>{this.props.item.address[0].country}</Text>
+        </View>
+        <TouchableHighlight style={styles.removeMarkerStyle} onPress={()=>this.removeMarker(item)} underlayColor='transparent'>
           <View>
-            <Text>Remove</Text>
+            <Text style={{color: 'red'}}>Remove Marker</Text>
           </View>
         </TouchableHighlight>
-        </View>
-        <View>
-          <Text>{this.props.title}</Text>
-        </View>
       </View>
     );
   }
@@ -31,8 +42,20 @@ export default class App extends React.Component{
     Actions.pop()
   }
 
-  removeMarker(){
-    alert('aa')
+  removeMarker(item){
+
+    Alert.alert(
+      'Notice',
+      'Are u sure to remove marker?',
+      [
+        {text: 'Okay', onPress: () => {this.removeItem(item); Actions.pop();}},
+      ],
+      { cancelable: true, text: 'Cancel', onpress: ()=>{} }
+    )
+  }
+
+  removeItem(item){
+
   }
 
 }//end of class
@@ -40,17 +63,20 @@ export default class App extends React.Component{
 const styles = StyleSheet.create({
   container:{
     height: device.height * 0.5,
-    backgroundColor: '#F8F6E1',
+    backgroundColor: '#e2e8e4',
   },
-  embeddedContainer:{
-    flexDirection: 'row'
+  labelStyle:{
+    width: 100,
   },
   removeMarkerStyle:{
-    alignItems: 'flex-start'
+    alignSelf: 'center',
+    marginTop: 20,
   },
   closeButtonStyle:{
     alignItems: 'flex-end',
-    justifyContent:'center'
+    justifyContent:'center',
+    marginRight: 5,
+    marginTop: 5
   },
 
 

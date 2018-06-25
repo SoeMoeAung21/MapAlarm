@@ -39,7 +39,9 @@
 		40A130D620AAA70C004EB357 /* libRNSound.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40A130D520AAA6F8004EB357 /* libRNSound.a */; };
 		40A130E120AAC113004EB357 /* ringtone.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 40A130DF20AAC113004EB357 /* ringtone.mp3 */; };
 		40A130E220AAC113004EB357 /* ringtone1.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 40A130E020AAC113004EB357 /* ringtone1.mp3 */; };
+		40ADADED20BFF6B0005BE4E3 /* libRCTPushNotification.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40ADADE920BFF67D005BE4E3 /* libRCTPushNotification.a */; };
 		40B5066D20A54DBB00B3139D /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 40B5064720A54DBB00B3139D /* MapKit.framework */; };
+		40C077CB20C50D7E00DB8D00 /* libRNGeocoder.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 40C077C920C50D6A00DB8D00 /* libRNGeocoder.a */; };
 		40C091C420AD40B800230A06 /* iphone_x.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 40C0919B20AD40B800230A06 /* iphone_x.mp3 */; };
 		40C091C520AD40B800230A06 /* samsung_guitar.mp3 in Resources */ = {isa = PBXBuildFile; fileRef = 40C091C320AD40B800230A06 /* samsung_guitar.mp3 */; };
 		5E9157361DD0AC6A00FF2AA8 /* libRCTAnimation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */; };
@@ -295,12 +297,33 @@
 			remoteGlobalIDString = 19825A1E1BD4A89800EE0337;
 			remoteInfo = RNSound;
 		};
+		40ADADE820BFF67D005BE4E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40ADADE320BFF67D005BE4E3 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = RCTPushNotification;
+		};
+		40ADADEA20BFF67D005BE4E3 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40ADADE320BFF67D005BE4E3 /* RCTPushNotification.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 3D05745F1DE6004600184BB4;
+			remoteInfo = "RCTPushNotification-tvOS";
+		};
 		40B506A320A58EC800B3139D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = A6EF4783399B4FE4935CE403 /* RNAlarm.xcodeproj */;
 			proxyType = 2;
 			remoteGlobalIDString = 134814201AA4EA6300B7C361;
 			remoteInfo = RNAlarm;
+		};
+		40C077C820C50D6A00DB8D00 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 40C0779C20C50D6A00DB8D00 /* RNGeocoder.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = BF8FCF941BFFB184000FCD37;
+			remoteInfo = RNGeocoder;
 		};
 		5E9157321DD0AC6500FF2AA8 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -367,7 +390,9 @@
 		40A130AA20AAA6F8004EB357 /* RNSound.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNSound.xcodeproj; path = "../node_modules/react-native-sound/RNSound.xcodeproj"; sourceTree = "<group>"; };
 		40A130DF20AAC113004EB357 /* ringtone.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ringtone.mp3; path = ../Sounds/ringtone.mp3; sourceTree = "<group>"; };
 		40A130E020AAC113004EB357 /* ringtone1.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = ringtone1.mp3; path = ../Sounds/ringtone1.mp3; sourceTree = "<group>"; };
+		40ADADE320BFF67D005BE4E3 /* RCTPushNotification.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RCTPushNotification.xcodeproj; path = "../node_modules/react-native/Libraries/PushNotificationIOS/RCTPushNotification.xcodeproj"; sourceTree = "<group>"; };
 		40B5064720A54DBB00B3139D /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		40C0779C20C50D6A00DB8D00 /* RNGeocoder.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = RNGeocoder.xcodeproj; path = "../node_modules/react-native-geocoder/ios/RNGeocoder.xcodeproj"; sourceTree = "<group>"; };
 		40C0919B20AD40B800230A06 /* iphone_x.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = iphone_x.mp3; path = ../Sounds/iphone_x.mp3; sourceTree = "<group>"; };
 		40C091C320AD40B800230A06 /* samsung_guitar.mp3 */ = {isa = PBXFileReference; lastKnownFileType = audio.mp3; name = samsung_guitar.mp3; path = ../Sounds/samsung_guitar.mp3; sourceTree = "<group>"; };
 		42DD61F7D88601D72746C86F /* Pods-MapAlarm.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-MapAlarm.debug.xcconfig"; path = "Pods/Target Support Files/Pods-MapAlarm/Pods-MapAlarm.debug.xcconfig"; sourceTree = "<group>"; };
@@ -393,6 +418,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40C077CB20C50D7E00DB8D00 /* libRNGeocoder.a in Frameworks */,
+				40ADADED20BFF6B0005BE4E3 /* libRCTPushNotification.a in Frameworks */,
 				40A130D620AAA70C004EB357 /* libRNSound.a in Frameworks */,
 				40B5066D20A54DBB00B3139D /* MapKit.framework in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
@@ -573,6 +600,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		40ADADE420BFF67D005BE4E3 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				40ADADE920BFF67D005BE4E3 /* libRCTPushNotification.a */,
+				40ADADEB20BFF67D005BE4E3 /* libRCTPushNotification-tvOS.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 		40B5067A20A58EC700B3139D /* Recovered References */ = {
 			isa = PBXGroup;
 			children = (
@@ -585,6 +621,14 @@
 			isa = PBXGroup;
 			children = (
 				40B506A420A58EC800B3139D /* libRNAlarm.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		40C0779D20C50D6A00DB8D00 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				40C077C920C50D6A00DB8D00 /* libRNGeocoder.a */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -619,6 +663,8 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				40C0779C20C50D6A00DB8D00 /* RNGeocoder.xcodeproj */,
+				40ADADE320BFF67D005BE4E3 /* RCTPushNotification.xcodeproj */,
 				40A130AA20AAA6F8004EB357 /* RNSound.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
@@ -778,6 +824,8 @@
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = L8F2UE2KW7;
+						ProvisioningStyle = Manual;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
 								enabled = 1;
@@ -836,6 +884,10 @@
 					ProjectRef = 00C302D31ABCB9D200DB3ED1 /* RCTNetwork.xcodeproj */;
 				},
 				{
+					ProductGroup = 40ADADE420BFF67D005BE4E3 /* Products */;
+					ProjectRef = 40ADADE320BFF67D005BE4E3 /* RCTPushNotification.xcodeproj */;
+				},
+				{
 					ProductGroup = 139105B71AF99BAD00B5F7CC /* Products */;
 					ProjectRef = 139105B61AF99BAD00B5F7CC /* RCTSettings.xcodeproj */;
 				},
@@ -858,6 +910,10 @@
 				{
 					ProductGroup = 40B506A020A58EC800B3139D /* Products */;
 					ProjectRef = A6EF4783399B4FE4935CE403 /* RNAlarm.xcodeproj */;
+				},
+				{
+					ProductGroup = 40C0779D20C50D6A00DB8D00 /* Products */;
+					ProjectRef = 40C0779C20C50D6A00DB8D00 /* RNGeocoder.xcodeproj */;
 				},
 				{
 					ProductGroup = 40A130AB20AAA6F8004EB357 /* Products */;
@@ -1106,11 +1162,32 @@
 			remoteRef = 40A130D420AAA6F8004EB357 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
+		40ADADE920BFF67D005BE4E3 /* libRCTPushNotification.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRCTPushNotification.a;
+			remoteRef = 40ADADE820BFF67D005BE4E3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		40ADADEB20BFF67D005BE4E3 /* libRCTPushNotification-tvOS.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = "libRCTPushNotification-tvOS.a";
+			remoteRef = 40ADADEA20BFF67D005BE4E3 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		40B506A420A58EC800B3139D /* libRNAlarm.a */ = {
 			isa = PBXReferenceProxy;
 			fileType = archive.ar;
 			path = libRNAlarm.a;
 			remoteRef = 40B506A320A58EC800B3139D /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		40C077C920C50D6A00DB8D00 /* libRNGeocoder.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libRNGeocoder.a;
+			remoteRef = 40C077C820C50D6A00DB8D00 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		5E9157331DD0AC6500FF2AA8 /* libRCTAnimation.a */ = {
@@ -1377,8 +1454,10 @@
 			baseConfigurationReference = 42DD61F7D88601D72746C86F /* Pods-MapAlarm.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = L8F2UE2KW7;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-alarm/ios",
@@ -1390,7 +1469,10 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.eam.lagc;
 				PRODUCT_NAME = MapAlarm;
+				PROVISIONING_PROFILE = "6a40886c-4d45-4451-ac60-81fec51af1b3";
+				PROVISIONING_PROFILE_SPECIFIER = "LAGC Conf App [Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -1400,7 +1482,9 @@
 			baseConfigurationReference = F1EB53C0F1075DFCC0A72796 /* Pods-MapAlarm.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = L8F2UE2KW7;
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/../node_modules/react-native-alarm/ios",
@@ -1412,7 +1496,10 @@
 					"-ObjC",
 					"-lc++",
 				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.eam.lagc;
 				PRODUCT_NAME = MapAlarm;
+				PROVISIONING_PROFILE = "6a40886c-4d45-4451-ac60-81fec51af1b3";
+				PROVISIONING_PROFILE_SPECIFIER = "LAGC Conf App [Development";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

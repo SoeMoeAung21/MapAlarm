@@ -1,8 +1,10 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS, TouchableHighlight } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS, TouchableHighlight, PushNotificationIOS, KeyboardAvoidingView } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import App from '../App.js'
 import Sound from 'react-native-sound';
+import Geocoder from 'react-native-geocoder';
+
 var device = Dimensions.get('window');
 
 import styles from './MainViewStyles/AddAlarmStyle';
@@ -29,7 +31,7 @@ var labelData=[
   {
     key: 1,
     outerBackgroundColor: 'white',
-    innerBackgroundColor: 'red',
+    innerBackgroundColor: '#4E7BCE',
     type: 'Urgent',
     typeColor: 'black'
   },
@@ -59,16 +61,40 @@ export default class AddAlarm extends React.Component{
       selectedSoundName: null,
       titleValue: null,
       descriptionValue: null,
-      selectedLableIndex: 0
+      selectedLableIndex: 0,
+      address: null
     }
     this.selectedSound = null
+
     this.labelFunction = this.labelFunction.bind(this)
   }
 
 componentDidMount(){
   Actions.refresh({onRight : () => this.saveAlarm()})
   Actions.refresh({onLeft : ()=>this.cancelAlarm()})
+  console.log('*************');
+  console.log(this.props.location);
+  console.log('*************');
+  Geocoder.fallbackToGoogle('AIzaSyD7KdCYnDcFxu0Mfu0dxgKP4V6coDFgv4k');
+  this.getAddress()
+
+
+
 }
+
+  async getAddress() {
+
+    var latTemp = this.props.location.coordinate.latitude
+    var longTemp = this.props.location.coordinate.longitude
+
+    var result = await Geocoder.geocodePosition({lat: latTemp, lng: longTemp})
+    this.setState({
+      address: result
+    })
+    console.log("++++++++++++++++++++++++++");
+    console.log(result);
+    console.log("++++++++++++++++++++++++++");
+  }
 
   playSelectedSound(soundName){
     Sound.setCategory('Playback')
@@ -130,7 +156,7 @@ componentDidMount(){
       var tempTypeColor = 'black'
 
       if(this.state.selectedLableIndex === key){
-        tempTypeColor = 'blue'
+        tempTypeColor = 'lightblue'
       }
       return(
         {
@@ -174,15 +200,17 @@ componentDidMount(){
   render() {
     return (
       <View style={styles.viewStyle}>
+      <KeyboardAvoidingView behavior='position'>
         <TextInput style={styles.titleStyle} value={this.state.titleValue} onChangeText={(text)=>this.setState({titleValue: text})} placeholder='Title'/>
-        <TextInput style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>
+        <TextInput multiline={true} style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>
+        </KeyboardAvoidingView>
         <View style={{alignItems: 'center', flexDirection: 'row', padding: 10}}>
-          <Text style={{color: 'blue', fontSize: 20, fontWeight: 'bold', marginRight: 20}}>Label : </Text>
+          <Text style={{color: 'white', fontSize: 20,fontFamily: 'Georgia', fontWeight: 'bold', marginRight: 20}}>Label : </Text>
           {this.labelFunction()}
         </View>
         <Picker
           selectedValue={this.state.selectedSoundName}
-          style={{ height: 50, width: device.width - 80 }}
+          style={{ width: device.width - 80}}
           onValueChange={(itemValue, itemIndex) => this.selectingSound(itemValue, itemIndex)}>
         {this.renderPickerItem()}
         </Picker>
@@ -216,8 +244,10 @@ componentDidMount(){
     alarmInfo.latitude = this.props.location.coordinate.latitude
     alarmInfo.longitude = this.props.location.coordinate.longitude
     alarmInfo.isMarkerDraggable = false
+    alarmInfo.address = this.state.address
     alarmInfo.keyId = 'AlId' + dateId
-
+    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&");
+    console.log(alarmInfo);
     if (this.selectedSound === null){
 
     }else{

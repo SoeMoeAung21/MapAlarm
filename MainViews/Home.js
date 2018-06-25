@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, ScrollView, TouchableHighlight, Animated, AsyncStorage } from 'react-native';
+import { Platform, StyleSheet, Text, View, ScrollView, TouchableHighlight, Animated, AsyncStorage, PushNotificationIOS } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import MapView, {Marker, PROVIDER_GOOGLE} from 'react-native-maps';
+import PushNotification from 'react-native-push-notification';
+
 import App from '../App.js'
 
 import Sound from 'react-native-sound';
@@ -13,6 +15,9 @@ var testImage = require('../Images/flag-pink.png')
 var newImage = require('../Images/new-flag.png')
 
 var TEMPNOTE = []
+
+
+
 
 export default class Home extends React.Component{
 
@@ -34,12 +39,12 @@ export default class Home extends React.Component{
 
   componentDidMount(){
     Actions.refresh({onRight : () => this.addNewReminder()})
-    Actions.refresh({onLeft: ()=>this.removeReminder()})
+
+
+
     this.retrieveAllSavedAlarm()
     this.getCurrentLocation()
-    this.userLocationChange()
-
-
+    this.notification()
 
     Sound.setCategory('Playback')
 
@@ -49,14 +54,10 @@ export default class Home extends React.Component{
         return;
       }
 
-
-
       console.log('duration in seconds: ' + this.whoosh.getDuration() + 'number of channels: ' + this.whoosh.getNumberOfChannels());
     });
 
   }
-
-
 
 
   retrieveAllSavedAlarm(){
@@ -64,9 +65,6 @@ export default class Home extends React.Component{
     var service = this
     AsyncStorage.getAllKeys((err, keys) => {
       AsyncStorage.multiGet(keys, (err, stores) => {
-        console.log('******* Stores ********');
-        console.log(stores);
-        console.log('***************');
 
         stores.map((result, i, store) => {
 
@@ -76,15 +74,11 @@ export default class Home extends React.Component{
           tempArray.push(value)
         });
 
-
-
         service.setState({
           allReminders : tempArray.slice()
 
         })
-        console.log('******* allReminders ********');
-        console.log(this.state.allReminders);
-        console.log('***************');
+        this.userLocationChange()
         TEMPNOTE = tempArray.slice();
       });
     });
@@ -103,9 +97,7 @@ export default class Home extends React.Component{
   }
 
 
-
   soundAudio(){
-
 
       this.whoosh.play((success) => {
         if (success) {
@@ -131,8 +123,7 @@ export default class Home extends React.Component{
           longitudeDelta: 0.0055,
         }
       });
-      console.log('-----------Position------------');
-      console.log(position);
+
       }, (error) => {
         alert(JSON.stringify(error))
       }, {
@@ -145,13 +136,14 @@ export default class Home extends React.Component{
   userLocationChange(){
     this.watchID = navigator.geolocation.watchPosition(
       (position)=>{
+
         this.setState({
           changingLatitude: position.coords.latitude,
           changingLongitude: position.coords.longitude,
           error: null,
         })
-        console.log('===============PPPPPPPPP===============');
-        console.log(position);
+
+        this.localNotification()
         this.checkingPosition()
       },
       (error)=>this.setState({
@@ -161,28 +153,67 @@ export default class Home extends React.Component{
 
   }
 
+  localNotification(){
+    PushNotification.localNotification({
+      /* iOS and Android properties */
+      title: "My Notification Title", // (optional)
+      message: "My Notification Message", // (required)
+      playSound: false, // (optional) default: true
+      soundName: 'default', // (optional) Sound to play when the notification is shown. Value of 'default' plays the default sound. It can be set to a custom sound such as 'android.resource://com.xyz/raw/my_sound'. It will look for the 'my_sound' audio file in 'res/raw' directory and play it. default: 'default' (default sound is played)
+      number: 3, // (optional) Valid 32 bit integer specified as string. default: none (Cannot be zero)
+    //  date: new Date(Date.now() + (3 * 1000)) // in 60 secs
+    });
+  }
+
+  notification(){
+    PushNotification.configure({
+
+
+    onRegister: function(token) {
+        console.log( 'TOKEN:', token );
+    },
+
+
+    onNotification: function(notification) {
+
+        alert(notification.message)
+        notification.finish(PushNotificationIOS.FetchResult.NoData);
+    },
+
+    senderID: "YOUR GCM SENDER ID",
+
+
+    permissions: {
+        alert: true,
+        badge: true,
+        sound: true
+    },
+
+
+    popInitialNotification: true,
+
+
+    requestPermissions: true,
+  });
+
+  }
+
+
   checkingPosition(){
 
     this.state.allReminders.map((item)=>{
 
-      if(item.latitude-0.0005 < this.state.changingLatitude < item.latitude+0.0005 && item.longitude-0.0005 < this.state.changingLongitude < item.longitude+0.0005){
+      if((item.latitude-0.0007 < this.state.changingLatitude && this.state.changingLatitude < item.latitude+0.0007)  && (item.longitude-0.0007 < this.state.changingLongitude && this.state.changingLongitude < item.longitude+0.0007)){
         alert('Welldone!')
         navigator.geolocation.clearWatch(this.watchId);
       }else{
         navigator.geolocation.clearWatch(this.watchId);
       }
-
-      console.log('|||||||||||||||item|||||||||||||||');
-      console.log(item);
-
     })
-
-
   }
 
 
   addNewReminder(){
-
 
     this.whoosh.stop()
     if(!this.state.alreadyShowNewMarker){
@@ -213,21 +244,15 @@ export default class Home extends React.Component{
       Actions.refresh({leftTitle: null})
     }else{
 
-      console.log('******* no. of TEMPNOTE ******');
-      console.log(TEMPNOTE.length);
-      console.log('******* no. of remainders******');
-
       this.setState({
         allReminders: TEMPNOTE.slice(),
         buttonHeight: 0,
         alreadyShowNewMarker: false
       })
       Actions.refresh({rightTitle: '+'})
-      Actions.refresh({leftTitle: 'Remove'})
 
     }
   }
-
 
 
   render() {
@@ -235,12 +260,10 @@ export default class Home extends React.Component{
       <View style={styles.container}>
         <MapView
           region={this.state.mapRegion}
-          onRegionChange={(region)=>this.setState({mapRegion: region})}
           style={{flex: 1}}
           zoomEnabled={true}
           pitchEnabled={true}
           showsUserLocation={true}
-          followsUserLocation={true}
           scrollEnable={true}
           showsCompass={true}
           showsIndoorLevelPicker={true}
@@ -260,6 +283,7 @@ export default class Home extends React.Component{
     );
   }
 
+
   renderMarkers() {
 
 
@@ -267,10 +291,9 @@ export default class Home extends React.Component{
 
       return(
         <Marker
-          onLongPress={()=>this.editMarker(marker)}
+          onCalloutPress={()=>this.editMarker(marker)}
           coordinate={{latitude: marker.latitude,longitude: marker.longitude}}
           title={marker.title ? marker.title : 'Hello'}
-          description={marker.description}
           centerOffset={{ x: 0, y: 0 }}
           anchor={{ x: 1, y: 1 }}
           onDragEnd={(e)=> this.changeNewMarkerLocation(e)}
@@ -284,13 +307,6 @@ export default class Home extends React.Component{
 
   changeNewMarkerLocation(e){
 
-    console.log('*********currentPosition*******');
-    console.log(this.state.currentPosition);
-    console.log('******************************');
-
-    console.log('******** NativeEvent ********');
-    console.log(e.nativeEvent);
-    console.log('******** END **********');
     this.setState({
       markerPosition: e.nativeEvent
     })
@@ -298,14 +314,14 @@ export default class Home extends React.Component{
 
   editMarker(marker){
     Actions.editMarker({item: marker})
+    console.log(marker);
   }
 
   comfirmingLocation(){
-    Actions.addAlarm({location : this.state.markerPosition, refreshMapView : () => this.refreshMapView()})
-  }
+    var passPosition =  this.state.markerPosition ? this.state.markerPosition : { coordinate: { latitude: this.state.currentPosition.coords.latitude, longitude: this.state.currentPosition.coords.longitude }}
 
-  removeReminder(){
-    alert('aaa')
+
+    Actions.addAlarm({location : passPosition, refreshMapView : () => this.refreshMapView()})
   }
 
 

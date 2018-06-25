@@ -3,6 +3,8 @@ package com.mapalarm;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.dieam.reactnativepushnotification.ReactNativePushNotificationPackage;
+import com.airbnb.android.react.maps.MapsPackage;
 import com.zmxv.RNSound.RNSoundPackage;
 import com.liang.RNAlarmPackage;
 import com.facebook.react.ReactNativeHost;
@@ -25,6 +27,8 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new ReactNativePushNotificationPackage(),
+            new MapsPackage(),
             new RNSoundPackage(),
             new RNAlarmPackage()
       );
