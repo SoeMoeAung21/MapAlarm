@@ -16,9 +16,6 @@ var newImage = require('../Images/new-flag.png')
 
 var TEMPNOTE = []
 
-
-
-
 export default class Home extends React.Component{
 
   constructor(props){
@@ -59,7 +56,6 @@ export default class Home extends React.Component{
 
   }
 
-
   retrieveAllSavedAlarm(){
     var tempArray =[];
     var service = this
@@ -95,7 +91,6 @@ export default class Home extends React.Component{
 
     this.retrieveAllSavedAlarm()
   }
-
 
   soundAudio(){
 
@@ -313,8 +308,9 @@ export default class Home extends React.Component{
   }
 
   editMarker(marker){
-    Actions.editMarker({item: marker})
     console.log(marker);
+    Actions.editMarker({item: marker, refreshMapView: () => this.refreshMapView()})
+
   }
 
   comfirmingLocation(){

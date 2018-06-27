@@ -1,10 +1,23 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, Dimensions, TouchableHighlight, Alert } from 'react-native';
+import { Platform, StyleSheet, Text, View, Dimensions, TouchableHighlight, Alert, AsyncStorage } from 'react-native';
 import {Router, Scene, Actions, Modal, Lightbox} from 'react-native-router-flux';
+import Label from '../Components/Label'
+import MyButton from '../Components/MyButton'
 var device = Dimensions.get('window');
 
 
 export default class App extends React.Component{
+
+  constructor(props){
+    super(props);
+    this.state ={
+
+      item : this.props.item
+
+    }
+
+  }
+
   render() {
     return (
       <View style={styles.container}>
@@ -14,49 +27,56 @@ export default class App extends React.Component{
           </View>
         </TouchableHighlight>
 
-        <View style={{padding: 10, flexDirection : 'row'}}>
-          <Text style={styles.labelStyle}>Title : </Text> <Text>{this.props.item.title}</Text>
-        </View>
-        <View style={{padding: 10, flexDirection : 'row'}}>
-          <Text style={styles.labelStyle}>Description : </Text> <Text >{this.props.item.description}</Text>
-        </View>
-        <View style={{padding: 10, flexDirection : 'row'}}>
-          <Text style={styles.labelStyle}>Street : </Text> <Text>{this.props.item.address[0].streetName}</Text>
-        </View>
-        <View style={{padding: 10, flexDirection : 'row'}}>
-          <Text style={styles.labelStyle}>Area : </Text> <Text>{this.props.item.address[0].adminArea}</Text>
-        </View>
-        <View style={{padding: 10, flexDirection : 'row'}}>
-          <Text style={styles.labelStyle}>Country : </Text> <Text>{this.props.item.address[0].country}</Text>
-        </View>
-        <TouchableHighlight style={styles.removeMarkerStyle} onPress={()=>this.removeMarker(item)} underlayColor='transparent'>
-          <View>
-            <Text style={{color: 'red'}}>Remove Marker</Text>
-          </View>
-        </TouchableHighlight>
+        <Label title={'Title'} text={this.state.item.title} pressLabel={()=> this.examplePressFunction()}/>
+        <Label title = {'Description'} text={this.state.item.description} />
+        <Label title = {'Street'} text={this.state.item.address[0].streetName ? this.state.item.address[0].streetName : '- - -'}/>
+        <Label title = {'Area'} text={this.state.item.address[0].adminArea}/>
+        <Label title = {'Country'} text = {this.state.item.address[0].country}/>
+
+        <MyButton customBtnStyle={{alignSelf: 'center'}} text={'Remove Marker'} pressButton={()=> this.removeMarker()}/>
+
       </View>
     );
   }
+
+  // <View style={{padding: 10, flexDirection : 'row'}}>
+  //   <Text style={styles.labelStyle}>Street : </Text> <Text>{this.state.item.address[0].streetName}</Text>
+  // </View>
+  // <View style={{padding: 10, flexDirection : 'row'}}>
+  //   <Text style={styles.labelStyle}>Area : </Text> <Text>{this.state.item.address[0].adminArea}</Text>
+  // </View>
+  // <View style={{padding: 10, flexDirection : 'row'}}>
+  //   <Text style={styles.labelStyle}>Country : </Text> <Text>{this.state.item.address[0].country}</Text>
+  // </View>
 
   lightboxCloseButton(){
     Actions.pop()
   }
 
-  removeMarker(item){
+  examplePressFunction (){
+    alert('Hello')
+  }
+
+  removeMarker(){
 
     Alert.alert(
       'Notice',
       'Are u sure to remove marker?',
       [
-        {text: 'Okay', onPress: () => {this.removeItem(item); Actions.pop();}},
-      ],
+      {text: 'Okay', onPress: () => {this.removeItem(this.state.item);}},
       { cancelable: true, text: 'Cancel', onpress: ()=>{} }
+      ],
     )
   }
 
   removeItem(item){
 
-  }
+    AsyncStorage.removeItem(item.keyId, () => {
+      this.props.refreshMapView()
+      Actions.pop()
+    });
+
+ }
 
 }//end of class
 
@@ -70,7 +90,7 @@ const styles = StyleSheet.create({
   },
   removeMarkerStyle:{
     alignSelf: 'center',
-    marginTop: 20,
+    marginTop: 40,
   },
   closeButtonStyle:{
     alignItems: 'flex-end',

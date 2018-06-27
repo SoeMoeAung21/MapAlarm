@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, AsyncStorage, Alert, TabBarIOS, TouchableHighlight, PushNotificationIOS, KeyboardAvoidingView } from 'react-native';
+import { Platform, StyleSheet, Text, View, TextInput, Picker, Dimensions, Image, AsyncStorage, Alert, TabBarIOS, TouchableHighlight, PushNotificationIOS, KeyboardAvoidingView } from 'react-native';
 import {Router, Scene, Actions} from 'react-native-router-flux';
 import App from '../App.js'
 import Sound from 'react-native-sound';
@@ -62,7 +62,7 @@ export default class AddAlarm extends React.Component{
       titleValue: null,
       descriptionValue: null,
       selectedLableIndex: 0,
-      address: null
+      address : null
     }
     this.selectedSound = null
 
@@ -72,9 +72,6 @@ export default class AddAlarm extends React.Component{
 componentDidMount(){
   Actions.refresh({onRight : () => this.saveAlarm()})
   Actions.refresh({onLeft : ()=>this.cancelAlarm()})
-  console.log('*************');
-  console.log(this.props.location);
-  console.log('*************');
   Geocoder.fallbackToGoogle('AIzaSyD7KdCYnDcFxu0Mfu0dxgKP4V6coDFgv4k');
   this.getAddress()
 
@@ -91,9 +88,6 @@ componentDidMount(){
     this.setState({
       address: result
     })
-    console.log("++++++++++++++++++++++++++");
-    console.log(result);
-    console.log("++++++++++++++++++++++++++");
   }
 
   playSelectedSound(soundName){
@@ -200,6 +194,7 @@ componentDidMount(){
   render() {
     return (
       <View style={styles.viewStyle}>
+      <Image source = {require ('../Images/map.jpg')} style={{width: device.width, height: device.height, opacity: 0.45,position: 'absolute'}}/>
       <KeyboardAvoidingView behavior='position'>
         <TextInput style={styles.titleStyle} value={this.state.titleValue} onChangeText={(text)=>this.setState({titleValue: text})} placeholder='Title'/>
         <TextInput multiline={true} style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>
@@ -210,7 +205,7 @@ componentDidMount(){
         </View>
         <Picker
           selectedValue={this.state.selectedSoundName}
-          style={{ width: device.width - 80}}
+          itemStyle={{ color: 'white', fontSize: 24, fontWeight: '400', width: device.width - 80}}
           onValueChange={(itemValue, itemIndex) => this.selectingSound(itemValue, itemIndex)}>
         {this.renderPickerItem()}
         </Picker>
@@ -246,8 +241,6 @@ componentDidMount(){
     alarmInfo.isMarkerDraggable = false
     alarmInfo.address = this.state.address
     alarmInfo.keyId = 'AlId' + dateId
-    console.log("&&&&&&&&&&&&&&&&&&&&&&&&&");
-    console.log(alarmInfo);
     if (this.selectedSound === null){
 
     }else{
@@ -267,8 +260,7 @@ componentDidMount(){
       )
 
     });
-    console.log("*************");
-    console.log(this.props.location);
+
 
   }
 
