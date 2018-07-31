@@ -194,7 +194,7 @@ componentDidMount(){
   render() {
     return (
       <View style={styles.viewStyle}>
-      <Image source = {require ('../Images/map.jpg')} style={{width: device.width, height: device.height, opacity: 0.45,position: 'absolute'}}/>
+      <Image source = {require ('../Images/map.jpg')} style={{width: device.width, height: device.height, opacity: 0.45, position: 'absolute'}}/>
       <KeyboardAvoidingView behavior='position'>
         <TextInput style={styles.titleStyle} value={this.state.titleValue} onChangeText={(text)=>this.setState({titleValue: text})} placeholder='Title'/>
         <TextInput multiline={true} style={styles.descriptionStyle} value={this.state.descriptionValue} onChangeText={(text)=>this.setState({descriptionValue: text})} placeholder='Description'/>

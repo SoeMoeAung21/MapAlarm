@@ -33,7 +33,7 @@ export default class App extends React.Component{
         <Label title = {'Area'} text={this.state.item.address[0].adminArea}/>
         <Label title = {'Country'} text = {this.state.item.address[0].country}/>
 
-        <MyButton customBtnStyle={{alignSelf: 'center'}} text={'Remove Marker'} pressButton={()=> this.removeMarker()}/>
+        <MyButton customBtnStyle={{alignSelf: 'center', marginTop: 40}} text={'Remove Marker'} pressButton={()=> this.removeMarker()}/>
 
       </View>
     );
